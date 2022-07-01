@@ -28,6 +28,8 @@ import base64
 import numpy as np
 
 # box form[x,y,w,h]
+
+
 def convert(size, box):
     # x_center y_center width height
     dw = 1. / size[0]
@@ -38,29 +40,30 @@ def convert(size, box):
     h = (box[3] - box[1]) * dh
     return (x, y, w, h)
 
+
 def main():
 
     # parse the arguments
     ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--input", required=True, dest="input", default="./4/", type=str, 
-        help="path to directory with images and LabelMe JSON files")
-    ap.add_argument("-o", "--output", required=True, dest="output", default="./res/", type=str, 
-        help="path to directory for store results")
-    ap.add_argument("-c", "--classes", dest="classes", default="./class_names.txt", type=str, 
-        help="file with class labels")
+    ap.add_argument("-i", "--input", required=True, dest="input", default="./4/", type=str,
+                    help="path to directory with images and LabelMe JSON files")
+    ap.add_argument("-o", "--output", required=True, dest="output", default="./res/", type=str,
+                    help="path to directory for store results")
+    ap.add_argument("-c", "--classes", dest="classes", default="./class_names.txt", type=str,
+                    help="file with class labels")
     args = vars(ap.parse_args())
-    #print(args)
+    # print(args)
 
     print("Start...")
 
     # get JSON files
-    files = sorted( glob.glob( os.path.join(args['input'], '*.json') ) )
+    files = sorted(glob.glob(os.path.join(args['input'], '*.json')))
     print("LabelMe files:", files)
 
     # read classes from file
     with open(args['classes']) as fs:
         classes = fs.read().splitlines()
-    print("class_names:",classes)
+    print("class_names:", classes)
 
     # create dirs
     dst_images_dir = os.path.join(args['output'], "images")
@@ -80,26 +83,28 @@ def main():
             image_name = dataj["imagePath"]
             print("Read", image_name)
             image_path = os.path.join(args['input'], image_name)
-            image = cv2.imread( image_path )
+            image = cv2.imread(image_path)
             if image is None:
                 print("Error read image by imagePath:", image_path)
                 # try by name
-                image_name = os.path.splitext( os.path.basename(filename) )[0] + ".jpg"
+                image_name = os.path.splitext(
+                    os.path.basename(filename))[0] + ".jpg"
                 image_path = os.path.join(args['input'], image_name)
                 print("Try read image by name:", image_path)
-                image = cv2.imread( image_path )
+                image = cv2.imread(image_path)
                 if image is None:
                     print("Error read image by name:", image_path)
                     if dataj["imageData"]:
                         print("Get image data from imageData")
                         image_b64_data = dataj["imageData"]
                         image_bin_data = base64.b64decode(image_b64_data)
-                        image = cv2.imdecode( np.asarray(bytearray(image_bin_data), dtype=np.uint8), flags=cv2.IMREAD_COLOR)
+                        image = cv2.imdecode(np.asarray(
+                            bytearray(image_bin_data), dtype=np.uint8), flags=cv2.IMREAD_COLOR)
                         print("Decoded image:", image.shape)
                         print("Save image", image_path)
                         cv2.imwrite(image_path, image)
 
-            #print(image.shape)
+            # print(image.shape)
             height, width = image.shape[:2]
             print("Image size:", width, height)
 
@@ -110,9 +115,10 @@ def main():
 
             shapes = dataj["shapes"]
 
-            res_file_name = os.path.splitext( os.path.basename(filename) )[0] + ".txt"
+            res_file_name = os.path.splitext(
+                os.path.basename(filename))[0] + ".txt"
             print(res_file_name)
-            
+
             dst_label_path = os.path.join(dst_labels_dir, res_file_name)
             try:
                 fw = open(dst_label_path, "a+")
@@ -127,10 +133,10 @@ def main():
 
                 x1, y1 = point1
                 x2, y2 = point2
-                xmin = min(x1,x2)
-                xmax = max(x1,x2)
-                ymin = min(y1,y2)
-                ymax = max(y1,y2)
+                xmin = min(x1, x2)
+                xmax = max(x1, x2)
+                ymin = min(y1, y2)
+                ymax = max(y1, y2)
 
                 print("MM:", xmin, xmax, ymin, ymax)
                 box = (xmin, ymin, xmax, ymax)
@@ -144,6 +150,7 @@ def main():
                 fw.write(out_str)
             fw.close()
     print("Done.")
+
 
 if __name__ == '__main__':
     main()
