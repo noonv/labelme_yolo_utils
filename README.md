@@ -9,10 +9,10 @@ example:
 ./convert_labelme2yolo.py --input=./photos --output=./res --classes=./class_names.txt
 ```
 
-## predetect_yolo_to_labelme
+## predetect_yolo2labelme
 make detection on image and store results into LabelMe JSON format  for next manual labeling
 
 example:
 ```
-./predetect_yolo_to_labelme.py --input=./photos/ --model=./yolov5s.pt --classes=./coco_class_names.txt --threshold=0.3
+./predetect_yolo2labelme.py --input=./photos/ --model=./yolov5s.pt --classes=./coco_class_names.txt --threshold=0.3
 ```
