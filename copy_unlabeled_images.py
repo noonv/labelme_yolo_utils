@@ -30,6 +30,7 @@ def main():
                     help="path to directory for store images without labels")
     ap.add_argument("-e", "--extention", dest="extention", default="jpg", type=str,
                     help="extention of image files")
+    ap.add_argument("-m", "--move", nargs='?', dest="move", const=True, default=False, help='move images instead of copy')
     args = vars(ap.parse_args())
     # print(args)
 
@@ -46,6 +47,8 @@ def main():
     if ext.startswith('.'):
         ext = ext[1:]
     print("Image extention:", ext)
+
+    is_move = args["move"]
 
     # get image files
     image_files = sorted(glob.glob(os.path.join(
@@ -73,11 +76,16 @@ def main():
         else:
             print("No label.")
 
-            # copy image
             dst_image_path = os.path.join(
                 dst_images_dir, os.path.basename(image_filename))
-            print("Copy image to:", dst_image_path)
-            shutil.copyfile(image_filename, dst_image_path)
+            if is_move:
+                # move image
+                print("Move image to:", dst_image_path)
+                shutil.move(image_filename, dst_image_path)
+            else:
+                # copy image
+                print("Copy image to:", dst_image_path)
+                shutil.copyfile(image_filename, dst_image_path)
     print("Done.")
 
 
