@@ -46,14 +46,20 @@ def check_module_available(module_name):
     return found
 
 
-def load_model(model_path):
+def load_model(model_path, device="0"):
     # init yolov5 model
 
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    print('device:', device)
+    is_cuda = device.isnumeric()
+    if is_cuda:
+        #device = torch.device("cuda:"+device if torch.cuda.is_available() else "cpu")
+        device = "cuda:"+device if torch.cuda.is_available() else "cpu"
 
-    if torch.cuda.is_available():
-        print('CUDA device name:', torch.cuda.get_device_name())
+        if torch.cuda.is_available():
+            print("CUDA device name:", torch.cuda.get_device_name())
+    else:
+        #device = torch.device("cpu")
+        device = "cpu"
+    print("device:", device)
 
     yolo = yolov5.YOLOv5(model_path, device)
     return yolo
@@ -168,16 +174,28 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--input", required=True, dest="input", default="./photos", type=str,
                     help="path to directory with images")
-    ap.add_argument("-c", "--classes", dest="classes", default="./class_names.txt", type=str,
+    ap.add_argument("-c", "--classes", dest="classes", default="./coco_class_names.txt", type=str,
                     help="file with class labels")
     ap.add_argument("-m", "--model", dest="model", default="./yolov5s.pt", type=str,
                     help="model fot detection")
     ap.add_argument("-t", "--threshold", dest="threshold", default=0.3, type=float,
                     help="threshold for model detection")
+    ap.add_argument("-e", "--extention", dest="extention", default="jpg", type=str,
+                    help="extention of image files")
+    ap.add_argument("-d", "--device", dest="device", default="0",
+                    type=str, help="device for model (cuda - 0) or cpu")
     args = vars(ap.parse_args())
     print(args)
 
     print("Start...")
+
+    # check extention
+    ext = args['extention']
+    if ext.startswith('*'):
+        ext = ext[1:]
+    if ext.startswith('.'):
+        ext = ext[1:]
+    print("Image extention:", ext)
 
     # check - is labelme available?
     is_labelme_available = False
@@ -200,10 +218,10 @@ def main():
     # load yolo model
     if is_yolov5_available:
         model_path = args['model']
-        model = load_model(model_path)
+        model = load_model(model_path, device=args["device"])
 
     # get image files
-    files = sorted(glob.glob(os.path.join(args['input'], '*.jpg')))
+    files = sorted(glob.glob(os.path.join(args['input'], "*."+ext)))
     print("Images:", files)
 
     # read classes from file
