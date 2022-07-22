@@ -18,9 +18,12 @@ example:
 ```
 
 ## copy_unlabeled_images
-copy images without LabelMe JSON files to output directory
+copy (or move) images without LabelMe JSON files to output directory
 
 example:
 ```
+# copy
 copy_unlabeled_images.py --input=./images --output=./unlabeled --extention="jpg"
+# move 
+copy_unlabeled_images.py --input=./images --output=./unlabeled --extention="jpg" --move
 ```
