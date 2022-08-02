@@ -1,8 +1,8 @@
 # labelme_yolo_utils
-utils for [labelme](https://github.com/wkentaro/labelme) and [YOLOv5](https://github.com/ultralytics/yolov5) detector
+Utils for [labelme](https://github.com/wkentaro/labelme) and [YOLOv5](https://github.com/ultralytics/yolov5) detector
 
 ## convert_labelme2yolo
-convert LabelMe JSON to YOLO txt
+Convert LabelMe JSON to YOLO txt.
 
 example:
 ```
@@ -10,7 +10,8 @@ example:
 ```
 
 ## predetect_yolo2labelme
-make detection on image and store results into LabelMe JSON format  for next manual labeling
+Make detection on image and store results into LabelMe JSON format  for next manual labeling.
+Could be useful for processes of Semi-supervised learning or Active Learning.
 
 example:
 ```
@@ -18,7 +19,7 @@ example:
 ```
 
 ## copy_unlabeled_images
-copy (or move) images without LabelMe JSON files to output directory
+Copy (or move) images without LabelMe JSON files to output directory.
 
 example:
 ```
