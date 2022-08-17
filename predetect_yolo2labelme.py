@@ -240,6 +240,7 @@ def main():
         image = cv2.imread(filename)
         if image is None:
             print("Error read image:", filename)
+            continue
 
         height, width = image.shape[:2]
         print("Image size:", width, height)
