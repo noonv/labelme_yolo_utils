@@ -28,3 +28,10 @@ copy_unlabeled_images.py --input=./images --output=./unlabeled --extention="jpg"
 # move 
 copy_unlabeled_images.py --input=./images --output=./unlabeled --extention="jpg" --move
 ```
+## cut_image_from_labelme
+Cut image from LabelMe JSON bounding box to image file.
+
+example:
+```
+./cut_image_from_labelme.py --input=./images --output=./bboxes
+```
