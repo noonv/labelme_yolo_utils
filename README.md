@@ -9,6 +9,23 @@ example:
 ./convert_labelme2yolo.py --input=./photos --output=./res --classes=./class_names.txt
 ```
 
+## convert_yolo2labelme
+Convert YOLO txt labels to LabelMe JSON.
+
+example:
+```
+./convert_yolo2labelme.py --input=./res --output=./res_json --classes=./res/class_names.txt
+```
+
+Takes data from input path: read images from "images" and labels from "labels" directories.
+
+Example:
+```
+    ./input_dir
+    |-> /images/*.jpg
+    `-> /labels/*.txt
+```
+
 ## predetect_yolo2labelme
 Make detection on image and store results into LabelMe JSON format  for next manual labeling.
 Could be useful for processes of Semi-supervised learning or Active Learning.
